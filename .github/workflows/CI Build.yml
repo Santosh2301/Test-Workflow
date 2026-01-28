@@ -1,0 +1,126 @@
+name: CI Build (DynatraceAction)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Optional: Dynatrace envs (set these as GitHub Secrets for security)
+  DYNATRACE_URL: ${{ secrets.DYNATRACE_URL }}         # e.g., https://<your-env>.live.dynatrace.com
+  DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # =======================
+      # Pick your stack
+      # =======================
+
+      # ---------- .NET (example) ----------
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
+
+      # ---------- Node.js (example) ----------
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '20'
+      #
+      # - name: Cache npm
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
+      #
+      # - name: Install
+      #   run: npm ci
+      #
+      # - name: Build
+      #   run: npm run build --if-present
+      #
+      # - name: Test
+      #   run: npm test -- --ci --reporters=default
+
+      # ---------- Java (Maven example) ----------
+      # - name: Setup Temurin JDK
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     distribution: temurin
+      #     java-version: '21'
+      #
+      # - name: Cache Maven
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.m2/repository
+      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-maven-
+      #
+      # - name: Build & Test
+      #   run: mvn -B -ntp clean verify
+
+      # =======================
+      # (Optional) Dynatrace Event
+      # =======================
+      - name: Send Dynatrace Deployment Event
+        if: ${{ env.DYNATRACE_URL != '' && env.DYNATRACE_API_TOKEN != '' }}
+        env:
+          GIT_SHA: ${{ github.sha }}
+          GIT_ACTOR: ${{ github.actor }}
+          GIT_REF: ${{ github.ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Sending Dynatrace deployment event..."
+          curl -sS -X POST "${DYNATRACE_URL}/api/v2/events/ingest" \
+            -H "Authorization: Api-Token ${DYNATRACE_API_TOKEN}" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d @- <<'JSON'
+          {
+            "eventType": "CUSTOM_DEPLOYMENT",
+            "title": "CI Build - ${REPO}",
+            "entitySelector": "type(APPLICATION)", 
+            "properties": {
+              "git.sha": "${GIT_SHA}",
+              "git.ref": "${GIT_REF}",
+              "triggered_by": "${GIT_ACTOR}"
+            },
+            "description": "Automated CI build from GitHub Actions"
+          }
+          JSON
+
+      - name: Archive Build Artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            **/bin/Release/**
+            **/target/**
+            build/**
+          if-no-files-found: ignore
+``
