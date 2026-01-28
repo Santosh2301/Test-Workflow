@@ -1,7 +1,7 @@
 name: Issue Trigger Workflow
 
 on:
-  issues:
+  issues: 
     types: [opened]   # triggers ONLY when a new issue is opened
 
 jobs:
