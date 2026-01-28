@@ -1,0 +1,12 @@
+name: Schedule Cron Trigger Workflow (8:05 PM IST)
+
+on:
+  schedule:
+    - cron: "35 14 * * *"   # 8:05 PM IST → 14:35 UTC
+
+jobs:
+  scheduled_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scheduled run
+        run: echo "This workflow ran at 8:05 PM IST!"
