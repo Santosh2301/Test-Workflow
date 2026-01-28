@@ -1,0 +1,24 @@
+name: issue type workflow
+
+on:
+  issues:
+    types: [opened]   # Trigger ONLY when a new issue is created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build env
+        run: echo "build success"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test env
+        run: echo "testing success"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy env
+        run: echo "deploy success"
