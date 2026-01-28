@@ -1,0 +1,20 @@
+name: push type workflow
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build env
+        run: echo "build success"
+  test:
+      runs-on: ubuntu-latest
+      steps:
+      - name: build env
+        run: echo "testing success"
+  deploy:
+      runs-on: ubuntu-latest
+      steps:
+      - name: build env
+        run: echo "deploy success"
