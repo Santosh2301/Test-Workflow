@@ -1,0 +1,28 @@
+name: Multiple Jobs With Dependencies
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build step
+        run: echo "Build job executed!"
+
+  test:
+    needs: build        # test will run ONLY after build succeeds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Test job executed after build!"
+
+  deploy:
+    needs: test         # deploy waits until test finishes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy step
+        run: echo "Deploy job executed after test!"
