@@ -1,0 +1,12 @@
+name: Issue Trigger Workflow
+
+on:
+  issues:
+    types: [opened]   # triggers ONLY when a new issue is opened
+
+jobs:
+  run_on_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Issue Event Triggered
+        run: echo "Issue workflow triggered successfully!"
