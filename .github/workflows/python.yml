@@ -16,4 +16,4 @@ jobs:
           python-version: "3.14"          
 
       - name: Run script
-        run: python my_script.py
+        run: python src/my_script.py
