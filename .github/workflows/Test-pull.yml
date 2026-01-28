@@ -1,0 +1,24 @@
+name: onpullrequest-Test
+
+on: pull_request
+
+jobs:
+
+  build:
+   runs-on: ubuntu-latest
+   steps:
+     - name: One Step
+       run: echo "One"
+       
+  test:
+   runs-on: ubuntu-latest
+   steps:
+      - name: One Step
+        run: echo "One"
+        
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: One Step
+        run: echo "One"
+ 
