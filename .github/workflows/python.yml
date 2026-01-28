@@ -6,6 +6,7 @@ on:
 jobs:
   CI_Build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -13,7 +14,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.14"          
+          python-version: "3.14"
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+          pip-install: requirements.txt   # ← installs packages automatically
 
       - name: Run script
-        run: python src/my_script.py
+        run: python my_script.py
