@@ -2,7 +2,7 @@ name: Schedule Cron Trigger Workflow (8:05 PM IST)
 
 on:
   schedule:
-    - cron: "35 14 * * *"   # 8:05 PM IST → 14:35 UTC
+    - cron: "35 14 * * *"   # 8:05 PM IST daily
 
 jobs:
   scheduled_job:
