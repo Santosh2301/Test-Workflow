@@ -1,0 +1,23 @@
+name: Push Trigger Workflow
+
+on:
+  push:       # Trigger workflow when code is pushed to the repository
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build step
+        run: echo "Build job executed on push!"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Test job executed on push!"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy step
+        run: echo "Deploy job executed on push!"
