@@ -1,0 +1,22 @@
+name: onpull request
+ 
+on: pull_request
+ 
+jobs:
+ 
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   - name: First Step
+     run: echo "First"
+ test:
+  runs-on: ubuntu-latest
+  steps:
+    - name: First Step
+      run: echo "First"
+ 
+ deploy:
+  runs-on: ubuntu-latest
+  steps:
+   - name: First Step
+     run: echo "First"
