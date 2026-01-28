@@ -1,24 +1,12 @@
-name: issue type workflow
+name: Issue Trigger
 
 on:
   issues:
-    types: [opened]   # Trigger ONLY when a new issue is created
+    types: [opened]   # Runs ONLY when a new issue is opened
 
 jobs:
-  build:
+  run_on_issue:
     runs-on: ubuntu-latest
     steps:
-      - name: build env
-        run: echo "build success"
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: test env
-        run: echo "testing success"
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: deploy env
-        run: echo "deploy success"
+      - name: Say Hello
+        run: echo "An issue was opened — workflow triggered successfully!"
