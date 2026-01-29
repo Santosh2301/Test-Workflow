@@ -1,23 +1,45 @@
-name: CI Build
+name: Python Non-Cont Build
+ 
+on: 
 
-on:
-  workflow_dispatch:
-
+ workflow_dispatch
+ 
 jobs:
-  CI_Build:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  Py_Build:
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
+   runs-on: ubuntu-latest
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+   steps:
 
-          
+     - name: Checkout
+
+       uses: actions/checkout@v6.0.2
+
+     - name: setup/install python dependiencies
+
+       uses: actions/setup-python@v6.2.0
+
+       with:
+
+        run: python -m pip install            # installing dependencies
+
+     - name: .py build                            
+
+       run: |
+
+        python -m py_compile src/main.py          # Byte-compiles .py → .pyc (optional)
+
+        echo "Python build successful"
+
+     - name: publish artifact
+
+       uses: actions/upload-artifact@v6.0.0
+
+       with:
+
+        name: python package
+
+        mkdir: staging
+
+        path: staging
